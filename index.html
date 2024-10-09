@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Win Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>Win Tracker</strong></li>
+        </ul>
+      
+    </nav>
+
+    <main class="container">
+        <section id="tracker">
+            <hgroup>
+                <h2 style=" font-size: 50px;background: -webkit-linear-gradient(#eee, #720404);-webkit-background-clip: text;-webkit-text-fill-color: transparent;">Player Win Tracker</h2>
+                <h3>Track wins and calculate score between players</h3>
+            </hgroup>
+            <br>
+            <p style="color: black;">Use this tool to track players' win counts and calculate how much they owe each other based on the number of wins and a set amount per game.</p>
+
+            <div id="amountContainer" class="input-group">
+                <input type="number" id="amountInput" placeholder="Enter amount per game" style="background-color: rgb(255, 255, 255); color:black; "/>
+                <button class="primary" onclick="setAmount()" style="background-color: #083d50;">Set Amount</button>
+            </div>
+        </section>
+
+        <section class="form-container">
+            <hgroup>
+                <h3>Add Player Details</h3>
+            </hgroup>
+            <div class="grid">
+                <input type="text" id="playerName" placeholder="Enter Player Name" required style="background-color: aliceblue; color:black"/>
+                <input type="number" id="playerWins" placeholder="Enter Win Count" required style="background-color: aliceblue; color:black"/>
+                <button class="secondary" onclick="addPlayer()" style="background-color: #083d50; height:60px;">Add Player</button>
+            </div>
+        </section>
+
+        <section id="player-list">
+            <hgroup>
+                <h2><strong>Win Score</strong></h2>
+            </hgroup>
+            <table role="grid">
+                <thead>
+                    <tr>
+                        <th style="background-color:#645287b7; color:black; width: 50%;">Player Name</th>
+                        <th style="background-color: #1f6d6d9e; color:black; width:50%">Win Count</th>
+                    </tr>
+                </thead>
+                <tbody id="playerTable"></tbody>
+            </table>
+        </section>
+
+        <section class="result-container">
+            <button class="outline" onclick="calculateOwes()" style="background: rgb(4,0,24);
+background: linear-gradient(51deg, rgba(4,0,24,1) 0%, rgba(187,15,178,0.7624299719887955) 35%, rgba(3,90,107,0.7148109243697479) 100%);">Calculate Payments</button>
+            <div id="result"></div>
+        </section>
+    </main>
+
+    <footer class="container">
+       
+    </footer>
+
+    <script>
+        let players = [];
+        let totalAmount = 0;
+
+        function setAmount() {
+            const amountInput = document.getElementById('amountInput');
+            const amountValue = parseFloat(amountInput.value);
+
+            if (isNaN(amountValue) || amountValue <= 0) {
+                alert('Please enter a valid amount.');
+                return;
+            }
+
+            totalAmount = amountValue;
+            alert(`Amount per game set to ${totalAmount} rupees`);
+            document.getElementById('amountContainer').style.display = 'none';
+        }
+
+        function addPlayer() {
+            const playerName = document.getElementById('playerName').value;
+            const playerWins = parseInt(document.getElementById('playerWins').value);
+
+            if (playerName === '' || isNaN(playerWins)) {
+                alert('Please enter a valid name and win count');
+                return;
+            }
+
+            players.push({ name: playerName, wins: playerWins });
+            displayPlayers();
+            document.getElementById('playerName').value = '';
+            document.getElementById('playerWins').value = '';
+        }
+
+        function displayPlayers() {
+            const table = document.getElementById('playerTable');
+            table.innerHTML = '';
+
+            players.forEach(player => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${player.name}</td><td>${player.wins}</td>`;
+                table.appendChild(row);
+            });
+        }
+
+        function calculateOwes() {
+            if (totalAmount === 0) {
+                alert('Please set a fixed amount before calculating payments');
+                return;
+            }
+        
+            let resultHTML = '<h3>Payment Calculations</h3>';
+        
+            players.forEach(player => {
+                let playerHasPayments = false; // Track if player owes or is owed money
+                let playerHTML = `<h4 style="color: black;">Payments for ${player.name}</h4>`;
+                playerHTML += `
+                    <table role="grid">
+                        <tr>
+                            <th style="background-color:#99d2dc; color:black; width: 33%;">Take/Give</th>
+                            <th style="background-color: #8de2c8; color:black; width: 33%;">Player</th>
+                            <th style="background-color: #84abdf; color:black; width: 33%;">Amount (Rupees)</th>
+                        </tr>
+                `;
+        
+                players.forEach(otherPlayer => {
+                    if (player.name !== otherPlayer.name) {
+                        const winDifference = player.wins - otherPlayer.wins;
+                        const amountOwed = Math.abs(winDifference) * totalAmount;
+                        const action = winDifference > 0 ? 'Take' : 'Give';
+        
+                        // Only include players where the win difference is non-zero
+                        if (winDifference !== 0) {
+                            playerHTML += `
+                                <tr>
+                                    <td>${action}</td>
+                                    <td>${otherPlayer.name}</td>
+                                    <td>${amountOwed} rupees</td>
+                                </tr>
+                            `;
+                            playerHasPayments = true; // Mark that this player has something to pay/receive
+                        }
+                    }
+                });
+        
+                playerHTML += '</table>';
+        
+                // Only add the player's section if they have payments to display
+                if (playerHasPayments) {
+                    resultHTML += playerHTML;
+                }
+            });
+        
+            document.getElementById('result').innerHTML = resultHTML;
+        }
+        
+    </script>
+
+</body>
+</html>

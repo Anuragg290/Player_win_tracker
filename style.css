@@ -1,0 +1,107 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Responsive Layout */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    color: #333;
+    text-align: center;
+}
+
+/* Layout Enhancements */
+main {
+    margin-top: 20px;
+}
+
+input, button {
+    font-size: 1rem;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    background-color: white;
+
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+table th {
+    background-color: #007bff;
+    color: white;
+ 
+}
+
+table td {
+    text-align: center;
+    color: black;
+    font-weight: 150;
+    font-weight: bold;
+   
+}
+
+/* Form Container */
+.form-container {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.result-container {
+    margin-top: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+    input, button {
+        width: 100%;
+    }
+
+    table {
+        font-size: 0.9rem;
+
+    }
+}
+li{
+    font-family: "Trebuchet MS", sans-serif;
+  font-size: 30px;
+  letter-spacing: -2px;
+  border-bottom: 2px solid black;
+  text-transform: uppercase;
+  background: -webkit-linear-gradient(#7b797904, #317000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
